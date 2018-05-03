@@ -21,7 +21,15 @@
       "Building\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Specification\\": "test/Specification"
+    }
+  },
   "scripts": {
     "serve": "php -S 0.0.0.0:8080 -t public/"
+  },
+  "require-dev": {
+    "behat/behat": "^3.3"
   }
 }
