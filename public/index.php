@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Rhumsaa\Uuid\Uuid;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Application;
 use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Expressive\WhoopsErrorHandler;
@@ -67,7 +68,15 @@ call_user_func(function () {
     });
 
     $app->post('/checkin/{buildingId}', function (Request $request, Response $response) use ($sm) : Response {
+        $buildingId = Uuid::fromString($request->getAttribute('buildingId'));
 
+        $commandBus = $sm->get(CommandBus::class);
+        $commandBus->dispatch(Command\CheckInUser::toBuilding(
+            $buildingId,
+            $request->getParsedBody()['username']
+        ));
+
+        return new RedirectResponse('/building/' . $buildingId->toString());
     });
 
     $app->post('/checkout/{buildingId}', function (Request $request, Response $response) use ($sm) : Response {
