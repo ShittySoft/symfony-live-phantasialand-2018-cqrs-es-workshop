@@ -6,6 +6,7 @@ namespace Building\Domain\Aggregate;
 
 use Building\Domain\DomainEvent\NewBuildingWasRegistered;
 use Building\Domain\DomainEvent\UserCheckedIn;
+use Building\Domain\DomainEvent\UserCheckedOut;
 use Prooph\EventSourcing\AggregateRoot;
 use Rhumsaa\Uuid\Uuid;
 
@@ -45,7 +46,10 @@ final class Building extends AggregateRoot
 
     public function checkOutUser(string $username)
     {
-        // @TODO to be implemented
+        $this->recordThat(UserCheckedOut::fromBuilding(
+            $this->uuid,
+            $username
+        ));
     }
 
     protected function whenNewBuildingWasRegistered(NewBuildingWasRegistered $event) : void
@@ -55,6 +59,11 @@ final class Building extends AggregateRoot
     }
 
     protected function whenUserCheckedIn(UserCheckedIn $event) : void
+    {
+        // Empty for now
+    }
+
+    protected function whenUserCheckedOut(UserCheckedOut $event) : void
     {
         // Empty for now
     }
